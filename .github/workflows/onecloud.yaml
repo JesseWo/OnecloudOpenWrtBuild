@@ -37,13 +37,21 @@ env:
   REPO_NAME: lede
   REPO_URL: https://github.com/coolsnowwolf/lede.git
   REPO_BRANCH: master
-  BUILD_DEPENDS:  "ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential \
-                   bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib \
-                   git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev \
-                   libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev \
-                   libssl-dev libtool lrzsz mkisofs msmtp ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 \
-                   python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo \
-                   uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev clang file nano aria2"
+  BUILD_DEPENDS: >
+    ack antlr3 asciidoc autoconf automake autopoint 
+    binutils bison build-essential bzip2 ccache cmake 
+    cpio curl device-tree-compiler fastjar flex gawk 
+    gettext gcc-multilib g++-multilib git gperf 
+    haveged help2man intltool libc6-dev-i386 
+    libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev 
+    libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev 
+    libncursesw5-dev libpython3-dev libreadline-dev 
+    libssl-dev libtool lrzsz mkisofs msmtp ninja-build 
+    p7zip p7zip-full patch pkgconf python3 
+    python3-pyelftools python3-setuptools qemu-utils 
+    rsync scons squashfs-tools subversion swig texinfo 
+    uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev 
+    clang file nano aria2
   # CONFIG_FILE is the name of your own config files for compiling, you should upload these files into the root 
   # directory of your workflow repo.
   CONFIG_FILE: .config
@@ -119,11 +127,22 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          sudo rm -rf /etc/apt/sources.list.d/*
-          sudo -E apt-get -qq update
-          sudo -E apt-get -qq install $BUILD_DEPENDS
-          sudo -E apt-get -qq autoremove --purge
-          sudo -E apt-get -qq clean
+          sudo apt-get update
+          sudo apt-get install -y \
+            ack antlr3 asciidoc autoconf automake autopoint \
+            binutils bison build-essential bzip2 ccache cmake \
+            cpio curl device-tree-compiler fastjar flex gawk \
+            gettext gcc-multilib g++-multilib git gperf \
+            haveged help2man intltool libc6-dev-i386 \
+            libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev \
+            libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev \
+            libncursesw5-dev libpython3-dev libreadline-dev \
+            libssl-dev libtool lrzsz mkisofs msmtp ninja-build \
+            p7zip p7zip-full patch pkgconf python3 \
+            python3-pyelftools python3-setuptools qemu-utils \
+            rsync scons squashfs-tools subversion swig texinfo \
+            uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev \
+            clang file nano aria2
           sudo timedatectl set-timezone $TIME_ZONE
           sudo mkdir -p /workdir/
           sudo chown $USER:$GROUPS /workdir/
@@ -137,9 +156,9 @@ jobs:
 
       - name: Run custom-script-1
         run: |
-          chmod +x $CUSTOM_SCRIPT_1
+          chmod +x $CUSTOM_SCRIPT_1 || true
           cd openwrt/
-          $GITHUB_WORKSPACE/$CUSTOM_SCRIPT_1
+          $GITHUB_WORKSPACE/$CUSTOM_SCRIPT_1 || true
 
       - name: Update feeds
         run: cd openwrt/ && ./scripts/feeds update -a
@@ -154,9 +173,9 @@ jobs:
  
       - name: Run custom-script-2
         run: |
-          chmod +x $CUSTOM_SCRIPT_2
+          chmod +x $CUSTOM_SCRIPT_2 || true
           cd openwrt/
-          $GITHUB_WORKSPACE/$CUSTOM_SCRIPT_2
+          $GITHUB_WORKSPACE/$CUSTOM_SCRIPT_2 || true
 
       - name: SSH connection to Actions
         uses: P3TERX/ssh2actions@main
